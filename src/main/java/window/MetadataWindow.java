@@ -33,7 +33,7 @@ public class MetadataWindow extends Stage {
     }
 
     public void setup() {
-        setGeneralTab();
+        generalTab.setContent(new GeneralTab(metadata));
         descriptionTab.setContent(new DescriptionTab(metadata));
         setTagsTab();
         tagsTab.setClosable(false);
@@ -60,32 +60,37 @@ public class MetadataWindow extends Stage {
         if (metadata.getTagsString() != null) {
             tagBoxes.add(new HBox(new Button("-"), new Button(metadata.getTagsString())));
         }
-        setupTagPane(tagBoxes);
+        tagsTab.setContent(new TagPane(tagBoxes));
     }
 
-    private void setGeneralTab() {
-        Label generalLabel = new Label("metadata.getGeneral()");
-        generalTab.setContent(generalLabel);
+    private static class TagPane extends FlowPane {
+        TagPane(List<HBox> tagBoxes) {
+            this.setHgap(5);
+            this.setVgap(10);
+            this.getChildren().addAll(tagBoxes);
+            this.getChildren().add(new Button("+"));
+
+            VBox container = new VBox();
+            container.setPadding(new Insets(10, 10, 10, 10));
+            container.getChildren().addAll(this);
+        }
     }
 
-    private void setupTagPane(List<HBox> tagBoxes) {
-        FlowPane tagPane = new FlowPane();
-        tagPane.setHgap(5);
-        tagPane.setVgap(10);
-        tagPane.getChildren().addAll(tagBoxes);
-        tagPane.getChildren().add(new Button("+"));
-
-        VBox container = new VBox();
-        container.setPadding(new Insets(10, 10, 10, 10)); // add a 20-pixel gap to the top
-        container.getChildren().addAll(tagPane);
-
-        tagsTab.setContent(container);
+    private static class GeneralTab extends ScrollPane {
+        GeneralTab(FileMetadata metadata) {
+            this.setContent(new Label(metadata.getGeneral()));
+        }
     }
 
     private static class DescriptionTab extends VBox {
         DescriptionTab(FileMetadata metadata) {
-            this.getChildren().addAll(new Headline(metadata.getHeadline()), new Description(metadata.getDescription()), new SaveButton());
+            this.getChildren().addAll(
+                    new Headline(metadata.getHeadline()),
+                    new Description(metadata.getDescription()),
+                    new SaveButton()
+            );
             this.setPadding(new Insets(5, 5, 5, 5));
+            setMargin(this.getChildren().get(2), new Insets(5, 0, 0, 0));
         }
 
         private static class Headline extends TextField {
@@ -105,6 +110,7 @@ public class MetadataWindow extends Stage {
             SaveButton() {
                 this.setText("Save");
                 this.setAlignment(Pos.BASELINE_RIGHT);
+                this.setDisable(true);
             }
         }
     }
