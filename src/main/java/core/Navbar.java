@@ -1,11 +1,13 @@
 package core;
 
+import javafx.geometry.Pos;
 import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
 import tool.FileList;
 import tool.FileMetadata;
+import tool.MyButton;
 import window.MetadataWindow;
 
 import java.awt.*;
@@ -13,17 +15,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class Navbar extends HBox {
-    private final Button openHere = new Button("Open File");
-    private final Button openWithExplorer = new Button("Open File in Explorer");
-    private final Button showMetadata = new Button("Show Metadata");
+    private final MyButton openHere = new MyButton("Open File");
+    private final MyButton openWithExplorer = new MyButton("Open File in Explorer");
+    private final MyButton showMetadata = new MyButton("Show Metadata");
 
     public Navbar() {
-        this.setSpacing(5);
-        this.getChildren().addAll(openHere, openWithExplorer, showMetadata);
-        setupNavbar();
+        setSpacing(5);
+        getChildren().addAll(openHere, openWithExplorer, showMetadata);
+        setAlignment(Pos.CENTER);
+        setFillHeight(true);
     }
 
-    public void setupNavbar() {
+    public void setup() {
         openHere.setOnAction(event -> Main.selectFile());
         openWithExplorer.setOnAction(event -> openWithExplorer(Main.getCurrentFile()));
         openWithExplorer.setDisable(true);

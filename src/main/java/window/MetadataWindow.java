@@ -78,7 +78,12 @@ public class MetadataWindow extends Stage {
 
     private static class GeneralTab extends ScrollPane {
         GeneralTab(FileMetadata metadata) {
-            this.setContent(new Label(metadata.getGeneral()));
+            Label generalContent = new Label(metadata.getTooltipString());
+            generalContent.setWrapText(true);
+            generalContent.setPrefWidth(WINDOW_WIDTH - 20);
+            setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
+            setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
+            this.setContent(generalContent);
         }
     }
 

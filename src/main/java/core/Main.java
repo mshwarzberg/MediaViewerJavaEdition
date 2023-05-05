@@ -1,12 +1,13 @@
 package core;
 
 import javafx.application.Application;
-import javafx.scene.Node;
+import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.Button;
-import javafx.scene.control.Dialog;
+import javafx.scene.control.SplitPane;
+import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
+import javafx.scene.layout.BorderPane;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
@@ -15,24 +16,19 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 import tool.ExifToolDirectoryScanner;
 import tool.FileList;
-import view.ImageViewer;
-import view.VideoPlayer;
+import view.Viewer;
 import window.MetadataWindow;
 
 import java.io.File;
 
-import static core.FileType.*;
-
 public class Main extends Application {
-    private static final StackPane stackPane = new StackPane();
     private static File currentFile;
     private static Stage primaryStage;
     private static final Navbar navbar = new Navbar();
-    private static final VideoPlayer videoPlayer = new VideoPlayer();
-    private static final ImageViewer imageView = new ImageViewer();
     private static File mostRecentDirectory = null;
     private static FileList fileList;
     private static MetadataWindow childWindow;
+    public static final int BAR_HEIGHT = 30;
 
     public static void main(String[] args) {
         launch(args);
@@ -40,15 +36,15 @@ public class Main extends Application {
 
     @Override
     public void start(Stage primaryStage) {
+        primaryStage.getIcons().add(new Image(new File("./src/main/resources/mediaicon.png").getAbsolutePath()));
         Main.primaryStage = primaryStage;
-        setupStackPane();
-        Scene scene = new Scene(stackPane);
+        Scene scene = new Scene(ContentViewPage.INSTANCE);
+        scene.getStylesheets().add("style.css");
         primaryStage.setMaximized(true);
         primaryStage.setTitle("Media Viewer");
-        stackPane.setBackground(Background.fill(Paint.valueOf("black")));
         primaryStage.setScene(scene);
         primaryStage.show();
-        stackPane.getChildren().add(navbar);
+        navbar.setup();
     }
 
     public static void selectFile() {
@@ -62,7 +58,7 @@ public class Main extends Application {
             if (isNewDirectory) {
                 scanDirectoryForMedia();
             }
-            displayFile();
+            displayFile(FileType.getByExtension(getFileExtension(currentFile)));
         }
     }
 
@@ -75,11 +71,6 @@ public class Main extends Application {
         thread.start();
     }
 
-    private static void clearActiveMedia() {
-        videoPlayer.clearSource();
-        imageView.clearSource();
-    }
-
     private static String getFileExtension(File selectedFile) {
         if (selectedFile == null) {
             return "";
@@ -87,48 +78,44 @@ public class Main extends Application {
         return selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1);
     }
 
-    private static void setupStackPane() {
-        stackPane.setOnMouseClicked(event -> stackPane.requestFocus());
-        stackPane.setOnKeyPressed(event -> {
-            if (fileList != null) {
-                if (event.getCode() == KeyCode.LEFT) {
+    public static class ContentViewPage extends BorderPane {
+        public static ContentViewPage INSTANCE = new ContentViewPage();
+        private ContentViewPage() {
+            setBackground(Background.fill(Paint.valueOf("black")));
+            setOnMouseClicked(event -> requestFocus());
+            setOnKeyPressed(event -> {
+                FileType type = FileType.getByExtension(getFileExtension(currentFile));
+                if (fileList != null) {
+                    if (event.getCode() == KeyCode.LEFT) {
 //                if (IMAGE.isType(getFileExtension(currentFile)) || event.isShiftDown()) {
-                    File previousFile = fileList.getPrevious(currentFile);
-                    if (previousFile != currentFile) {
-                        currentFile = previousFile;
-                        displayFile();
-                    }
+                        File previousFile = fileList.getPrevious(currentFile);
+                        if (previousFile != currentFile) {
+                            currentFile = previousFile;
+                            displayFile(type);
+                        }
 //                }
-                } else if (event.getCode() == KeyCode.RIGHT) {
+                    } else if (event.getCode() == KeyCode.RIGHT) {
 //                if (IMAGE.isType(getFileExtension(currentFile)) || event.isShiftDown()) {
-                    File nextFile = fileList.getNext(currentFile);
-                    if (nextFile != currentFile) {
-                        currentFile = nextFile;
-                        displayFile();
-                    }
+                        File nextFile = fileList.getNext(currentFile);
+                        if (nextFile != currentFile) {
+                            currentFile = nextFile;
+                            displayFile(type);
+                        }
 //                }
+                    }
                 }
-            }
-        });
+            });
+            setTop(navbar);
+            setCenter(Viewer.INSTANCE);
+        }
     }
 
-    private static void displayFile() {
+    private static void displayFile(FileType type) {
         primaryStage.setTitle(currentFile.getAbsolutePath());
-        clearActiveMedia();
-        if (IMAGE.isType(getFileExtension(currentFile))) {
-            imageView.setImageSource(currentFile.toURI());
-        }
-        if (VIDEO.isType(getFileExtension(currentFile))) {
-            videoPlayer.setVideoSource(currentFile.toURI());
-        }
-        if (DOCUMENT.isType(getFileExtension(currentFile))) {
-            System.out.println();
-        }
-        stackPane.requestFocus();
-    }
-
-    public static StackPane getStackPane() {
-        return stackPane;
+        Viewer.INSTANCE.setSources(type, currentFile.toURI());
+        Viewer.INSTANCE.requestFocus();
+        navbar.toFront();
+        navbar.setAlignment(Pos.BOTTOM_CENTER);
     }
 
     public static Stage getPrimaryStage() {

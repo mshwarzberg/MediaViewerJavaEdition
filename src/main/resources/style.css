@@ -1,0 +1,9 @@
+.customButton {
+    -fx-background-color: pink;
+    -fx-cursor: hand;
+}
+
+.customButton:hover {
+    -fx-background-color: #b88a92;
+    -fx-text-fill: white;
+}

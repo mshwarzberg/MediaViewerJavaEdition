@@ -36,7 +36,7 @@ public class TitleBar extends HBox {
             this.setText("X");
             this.setOnAction(event -> {
                 Main.getChildWindow().close();
-                Main.getStackPane().requestFocus();
+                Main.ContentViewPage.INSTANCE.requestFocus();
             });
         }
     }

@@ -1,30 +1,29 @@
 package view;
 
 import core.Main;
+import core.ResizeToScreen;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
 import java.net.URI;
 
-public class ImageViewer extends ImageView {
+public class ImageViewer extends ImageView implements ViewController {
+    public static final ImageViewer INSTANCE = new ImageViewer();
 
-    public void setImageSource(URI source) {
-        setContainerDimensions();
-        Main.getStackPane().getChildren().add(this);
-        String path = source.toString();
-        this.setImage(new Image(path));
-        Main.getNavbar().toFront();
+    private ImageViewer() {
+
     }
 
+    @Override
     public void clearSource() {
-        Main.getStackPane().getChildren().remove(this);
+        setImage(null);
     }
 
-    private void setContainerDimensions() {
-        if (this.getFitHeight() == 0 && this.getFitWidth() == 0) {
-            this.setPreserveRatio(true);
-            this.fitWidthProperty().bind(Main.getPrimaryStage().widthProperty());
-            this.fitHeightProperty().bind(Main.getPrimaryStage().heightProperty());
-        }
+    @Override
+    public void setSource(URI source) {
+        ResizeToScreen.setDimensions(this);
+        String path = source.toString();
+        setImage(new Image(path));
+        setVisible(true);
     }
 }

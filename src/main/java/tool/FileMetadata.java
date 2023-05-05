@@ -1,6 +1,5 @@
 package tool;
 
-import com.google.gson.annotations.SerializedName;
 import java.io.File;
 import java.util.List;
 
@@ -13,12 +12,10 @@ import java.util.Set;
 
 public class FileMetadata {
     private String fileName;
-
     private String sourceFile;
     private String fileSize;
-    private String general;
+    private String tooltipString;
     private String description;
-
     private List<String> tagsArray;
     private String tagsString;
     private String headline;
@@ -58,8 +55,8 @@ public class FileMetadata {
         return tagsString;
     }
 
-    public String getGeneral() {
-        return general;
+    public String getTooltipString() {
+        return tooltipString;
     }
 
     public static class FileMetadataDeserializer implements JsonDeserializer<FileMetadata> {
@@ -67,7 +64,7 @@ public class FileMetadata {
         public FileMetadata deserialize(JsonElement json, Type typeOfT, JsonDeserializationContext context) throws JsonParseException {
             FileMetadata fileMetadata = new FileMetadata();
             JsonObject jsonObject = json.getAsJsonObject();
-            buildGeneral(jsonObject, fileMetadata);
+            buildTooltip(jsonObject, fileMetadata);
             fileMetadata.fileName = getString(jsonObject.get("FileName"));
             fileMetadata.sourceFile = getString(jsonObject.get("SourceFile"));
             fileMetadata.file = new File(fileMetadata.sourceFile);
@@ -95,7 +92,7 @@ public class FileMetadata {
             return element.getAsString();
         }
 
-        private void buildGeneral(JsonObject jsonObject, FileMetadata fileMetadata) {
+        private void buildTooltip(JsonObject jsonObject, FileMetadata fileMetadata) {
             StringBuilder stringBuilder = new StringBuilder();
             Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
             for (Map.Entry<String, JsonElement> entry : entries) {
@@ -107,7 +104,7 @@ public class FileMetadata {
                         .append(value.toString())
                         .append("\n");
             }
-            fileMetadata.general = stringBuilder.toString();
+            fileMetadata.tooltipString = stringBuilder.toString();
         }
     }
 }
