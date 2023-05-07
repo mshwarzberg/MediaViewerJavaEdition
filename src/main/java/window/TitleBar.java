@@ -1,11 +1,11 @@
 package window;
 
 import core.Main;
-
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
+import javafx.scene.Cursor;
 import javafx.scene.control.Label;
+import javafx.scene.input.MouseEvent;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.layout.Priority;
@@ -14,14 +14,33 @@ import javafx.scene.paint.Paint;
 import tool.MyButton;
 
 public class TitleBar extends HBox {
+    private double xOffset = 0;
+    private double yOffset = 0;
+
     public TitleBar(String title) {
         setWidth(MetadataWindow.WINDOW_WIDTH);
         setBackground(Background.fill(Paint.valueOf("grey")));
-        getChildren().addAll(new Title(title), new Region(), new CloseButton()); // Add Region node
-        setHgrow(getChildren().get(1), Priority.ALWAYS); // Expand and center the space between Title and CloseButton
-        setAlignment(Pos.CENTER_LEFT); // Update alignment
+        getChildren().addAll(new Title(title), new Region(), new CloseButton());
+        setHgrow(getChildren().get(1), Priority.ALWAYS);
+        setAlignment(Pos.CENTER_LEFT);
         setFillHeight(true);
         setPadding(new Insets(0, 0, 0, 5));
+
+        // Register event handlers for window dragging
+        setOnMousePressed(this::handleMousePressed);
+        setOnMouseDragged(this::handleMouseDragged);
+    }
+
+    private void handleMousePressed(MouseEvent event) {
+        xOffset = event.getSceneX();
+        yOffset = event.getSceneY();
+    }
+
+    private void handleMouseDragged(MouseEvent event) {
+        double newX = event.getScreenX() - xOffset;
+        double newY = event.getScreenY() - yOffset;
+        Main.getChildWindow().setX(newX);
+        Main.getChildWindow().setY(newY);
     }
 
     private static class Title extends Label {
@@ -42,4 +61,5 @@ public class TitleBar extends HBox {
         }
     }
 }
+
 

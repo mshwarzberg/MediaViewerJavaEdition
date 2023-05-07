@@ -30,11 +30,11 @@ public class VideoViewer extends StackPane implements ViewController {
 
     @Override
     public void clearSource() {
-        MediaPlayer mediaPlayer = mediaView.getMediaPlayer();
-        if (mediaPlayer != null) {
-            mediaPlayer.pause();
+        MediaPlayer previousMediaPlayer = mediaView.getMediaPlayer();
+        if (previousMediaPlayer != null) {
+            previousMediaPlayer.stop();
+            previousMediaPlayer.dispose();
         }
-
         setVisible(false);
     }
 

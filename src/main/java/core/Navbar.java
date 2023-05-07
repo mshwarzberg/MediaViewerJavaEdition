@@ -24,9 +24,7 @@ public class Navbar extends HBox {
     private Navbar() {
         setSpacing(5);
         getChildren().addAll(openHere, openWithExplorer, showMetadata);
-        setAlignment(Pos.CENTER);
-        setBackground(Background.fill(Paint.valueOf("#818F657E")));
-        setPadding(new Insets(10, 10, 10, 10));
+        setPadding(new Insets(10));
         setHeight(Main.BAR_HEIGHT);
         openHere.setOnAction(event -> Main.selectFile());
         openWithExplorer.setOnAction(event -> openWithExplorer(Main.getCurrentFile()));

@@ -27,8 +27,8 @@ public class LeftControls extends HBox {
         muteUnmute.setOnAction(event -> {
             MediaPlayer player = VideoViewer.INSTANCE.mediaView.getMediaPlayer();
             if (player != null) {
-                player.setMute(VideoViewer.INSTANCE.isMuted());
-                muteUnmute.setText(VideoViewer.INSTANCE.isMuted() ? "Unmute" : "Mute");
+                player.setMute(!VideoViewer.INSTANCE.isMuted());
+                muteUnmute.setText(VideoViewer.INSTANCE.isMuted() ? "Mute" : "Unmute");
                 VideoViewer.INSTANCE.invertMuted();
             }
         });
