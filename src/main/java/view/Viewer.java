@@ -13,9 +13,8 @@ public class Viewer extends StackPane {
     public static final Viewer INSTANCE = new Viewer();
 
     private Viewer() {
-        setAlignment(Pos.CENTER);
-        getChildren().add(ImageViewer.INSTANCE);
-        getChildren().add(VideoViewer.INSTANCE);
+        getChildren().addAll(ImageViewer.INSTANCE, VideoViewer.INSTANCE);
+        setTranslateY(-Main.BAR_HEIGHT);
     }
 
     public void setSources(FileType fileType, URI uri) {
@@ -26,5 +25,4 @@ public class Viewer extends StackPane {
             case VIDEO -> VideoViewer.INSTANCE.setSource(uri);
         }
     }
-
 }

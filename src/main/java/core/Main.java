@@ -1,20 +1,16 @@
 package core;
 
 import javafx.application.Application;
-import javafx.geometry.Pos;
 import javafx.scene.Scene;
-import javafx.scene.control.SplitPane;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
-import javafx.scene.layout.HBox;
-import javafx.scene.layout.StackPane;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
-import tool.ExifToolDirectoryScanner;
+import tool.ExifToolScanner;
 import tool.FileList;
 import view.Viewer;
 import window.MetadataWindow;
@@ -24,11 +20,10 @@ import java.io.File;
 public class Main extends Application {
     private static File currentFile;
     private static Stage primaryStage;
-    private static final Navbar navbar = new Navbar();
     private static File mostRecentDirectory = null;
     private static FileList fileList;
     private static MetadataWindow childWindow;
-    public static final int BAR_HEIGHT = 30;
+    public static final int BAR_HEIGHT = 50;
 
     public static void main(String[] args) {
         launch(args);
@@ -44,7 +39,6 @@ public class Main extends Application {
         primaryStage.setTitle("Media Viewer");
         primaryStage.setScene(scene);
         primaryStage.show();
-        navbar.setup();
     }
 
     public static void selectFile() {
@@ -64,9 +58,9 @@ public class Main extends Application {
 
     private static void scanDirectoryForMedia() {
         Thread thread = new Thread(() -> {
-            ExifToolDirectoryScanner directoryScanner = new ExifToolDirectoryScanner(mostRecentDirectory.getAbsolutePath());
+            ExifToolScanner directoryScanner = new ExifToolScanner(mostRecentDirectory.getAbsolutePath());
             fileList = directoryScanner.scan();
-            navbar.enableButtons();
+            Navbar.INSTANCE.enableButtons();
         });
         thread.start();
     }
@@ -105,8 +99,8 @@ public class Main extends Application {
                     }
                 }
             });
-            setTop(navbar);
             setCenter(Viewer.INSTANCE);
+            setTop(Navbar.INSTANCE);
         }
     }
 
@@ -114,8 +108,6 @@ public class Main extends Application {
         primaryStage.setTitle(currentFile.getAbsolutePath());
         Viewer.INSTANCE.setSources(type, currentFile.toURI());
         Viewer.INSTANCE.requestFocus();
-        navbar.toFront();
-        navbar.setAlignment(Pos.BOTTOM_CENTER);
     }
 
     public static Stage getPrimaryStage() {
@@ -129,10 +121,6 @@ public class Main extends Application {
     @Nullable
     public static FileList getFileList() {
         return fileList;
-    }
-
-    public static HBox getNavbar() {
-        return navbar;
     }
 
     public static MetadataWindow getChildWindow() {

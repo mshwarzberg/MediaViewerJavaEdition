@@ -1,7 +1,8 @@
 package core;
 
+import controls.VideoControls;
+import javafx.geometry.Insets;
 import javafx.geometry.Pos;
-import javafx.scene.control.Button;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
 import javafx.scene.paint.Paint;
@@ -15,18 +16,18 @@ import java.io.File;
 import java.io.IOException;
 
 public class Navbar extends HBox {
+    public static final Navbar INSTANCE = new Navbar();
     private final MyButton openHere = new MyButton("Open File");
     private final MyButton openWithExplorer = new MyButton("Open File in Explorer");
     private final MyButton showMetadata = new MyButton("Show Metadata");
 
-    public Navbar() {
+    private Navbar() {
         setSpacing(5);
         getChildren().addAll(openHere, openWithExplorer, showMetadata);
         setAlignment(Pos.CENTER);
-        setFillHeight(true);
-    }
-
-    public void setup() {
+        setBackground(Background.fill(Paint.valueOf("#818F657E")));
+        setPadding(new Insets(10, 10, 10, 10));
+        setHeight(Main.BAR_HEIGHT);
         openHere.setOnAction(event -> Main.selectFile());
         openWithExplorer.setOnAction(event -> openWithExplorer(Main.getCurrentFile()));
         openWithExplorer.setDisable(true);

@@ -1,7 +1,6 @@
 package view;
 
 import core.Main;
-import core.ResizeToScreen;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
 
@@ -11,17 +10,20 @@ public class ImageViewer extends ImageView implements ViewController {
     public static final ImageViewer INSTANCE = new ImageViewer();
 
     private ImageViewer() {
-
+        Main.getPrimaryStage().showingProperty().addListener(observable -> {
+            setPreserveRatio(true);
+            fitWidthProperty().bind(Main.getPrimaryStage().widthProperty());
+            fitHeightProperty().bind(Main.getPrimaryStage().heightProperty().subtract(Main.BAR_HEIGHT / 2));
+        });
     }
 
     @Override
     public void clearSource() {
-        setImage(null);
+        setVisible(false);
     }
 
     @Override
     public void setSource(URI source) {
-        ResizeToScreen.setDimensions(this);
         String path = source.toString();
         setImage(new Image(path));
         setVisible(true);

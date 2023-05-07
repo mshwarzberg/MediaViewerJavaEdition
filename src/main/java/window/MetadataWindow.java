@@ -27,8 +27,8 @@ public class MetadataWindow extends Stage {
         setup();
         tabPane.getTabs().addAll(generalTab, descriptionTab, tagsTab);
         titleBar = new TitleBar(metadata.getSourceFile());
-        this.initStyle(StageStyle.UNDECORATED);
-        this.initModality(Modality.APPLICATION_MODAL);
+        initStyle(StageStyle.UNDECORATED);
+        initModality(Modality.APPLICATION_MODAL);
         setWindowContent();
     }
 
@@ -42,13 +42,14 @@ public class MetadataWindow extends Stage {
     }
 
     private void setWindowContent() {
-        this.setScene(new Scene(new VBox(titleBar, tabPane)));
-        this.setTitle(metadata.getSourceFile());
-        this.setWidth(WINDOW_WIDTH);
-        this.setHeight(300);
-        this.show();
+        Scene scene = new Scene(new VBox(titleBar, tabPane));
+        scene.getStylesheets().add("style.css");
+        setScene(scene);
+        setTitle(metadata.getSourceFile());
+        setWidth(WINDOW_WIDTH);
+        setHeight(300);
+        show();
     }
-
 
     private void setTagsTab() {
         List<HBox> tagBoxes = new ArrayList<>();
@@ -65,13 +66,12 @@ public class MetadataWindow extends Stage {
 
     private static class TagPane extends FlowPane {
         TagPane(List<HBox> tagBoxes) {
-            this.setHgap(5);
-            this.setVgap(10);
-            this.getChildren().addAll(tagBoxes);
-            this.getChildren().add(new Button("+"));
-
+            setHgap(5);
+            setVgap(10);
+            getChildren().addAll(tagBoxes);
+            getChildren().add(new Button("+"));
+            setPadding(new Insets(10, 10, 10, 10));
             VBox container = new VBox();
-            container.setPadding(new Insets(10, 10, 10, 10));
             container.getChildren().addAll(this);
         }
     }
@@ -83,39 +83,36 @@ public class MetadataWindow extends Stage {
             generalContent.setPrefWidth(WINDOW_WIDTH - 20);
             setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            this.setContent(generalContent);
+            setContent(generalContent);
+            setPadding(new Insets(10));
         }
     }
 
     private static class DescriptionTab extends VBox {
         DescriptionTab(FileMetadata metadata) {
-            this.getChildren().addAll(
-                    new Headline(metadata.getHeadline()),
-                    new Description(metadata.getDescription()),
-                    new SaveButton()
-            );
-            this.setPadding(new Insets(5, 5, 5, 5));
-            setMargin(this.getChildren().get(2), new Insets(5, 0, 0, 0));
+            getChildren().addAll(new Headline(metadata.getHeadline()), new Description(metadata.getDescription()), new SaveButton());
+            setPadding(new Insets(5, 5, 5, 5));
+            setMargin(getChildren().get(2), new Insets(5, 0, 0, 0));
         }
 
         private static class Headline extends TextField {
             Headline(String text) {
-                this.setText(text);
+                setText(text);
             }
         }
 
         private static class Description extends TextArea {
             Description(String text) {
-                this.setText(text);
-                this.setWrapText(true);
+                setText(text);
+                setWrapText(true);
             }
         }
 
         private static class SaveButton extends Button {
             SaveButton() {
-                this.setText("Save");
-                this.setAlignment(Pos.BASELINE_RIGHT);
-                this.setDisable(true);
+                setText("Save");
+                setAlignment(Pos.BASELINE_RIGHT);
+                setDisable(true);
             }
         }
     }

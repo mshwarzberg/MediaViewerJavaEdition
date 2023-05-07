@@ -1,9 +1,9 @@
-.customButton {
+.customButton, .tab {
     -fx-background-color: pink;
     -fx-cursor: hand;
 }
 
-.customButton:hover {
+.customButton:hover, .tab:hover {
     -fx-background-color: #b88a92;
     -fx-text-fill: white;
 }

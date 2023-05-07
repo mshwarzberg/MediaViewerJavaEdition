@@ -8,7 +8,7 @@ import java.util.List;
 import com.google.gson.*;
 import org.apache.commons.io.IOUtils;
 
-public class ExifToolDirectoryScanner {
+public class ExifToolScanner {
     private final String pathToScan;
     private static final String EXIFTOOL_PATH = "./src/main/resources/exiftool.exe";
     private static final Gson gson = new GsonBuilder()
@@ -17,7 +17,7 @@ public class ExifToolDirectoryScanner {
     ;
     private List<FileMetadata> fileMetadataArray = new ArrayList<>();
 
-    public ExifToolDirectoryScanner(String pathToScan) {
+    public ExifToolScanner(String pathToScan) {
         this.pathToScan = pathToScan;
     }
 
