@@ -14,4 +14,5 @@ module your.module.name {
 
     exports view;
     exports window;
+    exports video;
 }

@@ -26,9 +26,9 @@ public class TitleBar extends HBox {
         setFillHeight(true);
         setPadding(new Insets(0, 0, 0, 5));
 
-        // Register event handlers for window dragging
         setOnMousePressed(this::handleMousePressed);
         setOnMouseDragged(this::handleMouseDragged);
+        setOnMouseReleased(this::handleMouseReleased);
     }
 
     private void handleMousePressed(MouseEvent event) {
@@ -37,10 +37,15 @@ public class TitleBar extends HBox {
     }
 
     private void handleMouseDragged(MouseEvent event) {
+        setCursor(Cursor.CLOSED_HAND);
         double newX = event.getScreenX() - xOffset;
         double newY = event.getScreenY() - yOffset;
         Main.getChildWindow().setX(newX);
         Main.getChildWindow().setY(newY);
+    }
+
+    private void handleMouseReleased(MouseEvent event) {
+        setCursor(Cursor.DEFAULT);
     }
 
     private static class Title extends Label {

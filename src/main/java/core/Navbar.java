@@ -1,15 +1,8 @@
 package core;
 
-import controls.VideoControls;
 import javafx.geometry.Insets;
-import javafx.geometry.Pos;
-import javafx.scene.layout.Background;
 import javafx.scene.layout.HBox;
-import javafx.scene.paint.Paint;
-import tool.FileList;
-import tool.FileMetadata;
 import tool.MyButton;
-import window.MetadataWindow;
 
 import java.awt.*;
 import java.io.File;
@@ -30,7 +23,7 @@ public class Navbar extends HBox {
         openWithExplorer.setOnAction(event -> openWithExplorer(Main.getCurrentFile()));
         openWithExplorer.setDisable(true);
         showMetadata.setDisable(true);
-        showMetadata.setOnAction(event -> showMetadata());
+        showMetadata.setOnAction(event -> Main.showMetadata());
     }
 
     private void openWithExplorer(File currentFile) {
@@ -50,11 +43,5 @@ public class Navbar extends HBox {
     public void enableButtons() {
         openWithExplorer.setDisable(false);
         showMetadata.setDisable(false);
-    }
-
-    private void showMetadata() {
-        FileList fileList = Main.getFileList();
-        FileMetadata metadata = fileList.getMetadata(Main.getCurrentFile());
-        Main.setChildWindow(new MetadataWindow(metadata));
     }
 }

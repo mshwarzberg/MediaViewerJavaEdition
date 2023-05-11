@@ -7,3 +7,28 @@
     -fx-background-color: #b88a92;
     -fx-text-fill: white;
 }
+
+#videoControls {
+    -fx-background-color: rgba(20, 20, 20, 0.85);
+}
+
+.slider {
+    -fx-background-color: #ffffff;
+    -fx-cursor: hand;
+}
+
+#seekSlider .bar {
+    -fx-background-color: red;
+}
+
+#volumeSlider .bar {
+    -fx-background-color: green;
+}
+
+#seekSlider .track {
+    -fx-background-color: white;
+}
+
+.slider, .slider * {
+    -fx-background-insets: 0;
+}

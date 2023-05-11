@@ -1,25 +1,33 @@
 package tool;
 
+import core.FileType;
 import org.jetbrains.annotations.Nullable;
 
 import java.io.File;
 import java.util.List;
+import java.util.stream.Stream;
 
 public class FileList {
     private final List<FileMetadata> fileMetadataList;
     private final List<File> fileList;
 
     public FileList(List<FileMetadata> fileMetadataList) {
-        this.fileMetadataList = sort(fileMetadataList);
+        this.fileMetadataList = sort(filter(fileMetadataList));
         this.fileList = this.fileMetadataList.
                 stream()
                 .map(FileMetadata::getFile)
                 .toList();
     }
 
-    private static List<FileMetadata> sort(List<FileMetadata> unsortedList) {
+    private static Stream<FileMetadata> filter(List<FileMetadata> fileMetadataList) {
+        return fileMetadataList.stream().filter(fileMetadata -> {
+            FileType type = FileType.getByExtension(fileMetadata.getFile());
+            return type == FileType.IMAGE || type == FileType.VIDEO;
+        });
+    }
+
+    private static List<FileMetadata> sort(Stream<FileMetadata> unsortedList) {
         return unsortedList
-                .stream()
                 .sorted((aMetadata, bMetadata) -> {
                     File a = aMetadata.getFile();
                     File b = bMetadata.getFile();
@@ -46,11 +54,9 @@ public class FileList {
                         return cmp;
                     }
                     return a.getName().compareToIgnoreCase(b.getName());
-                })
-                .toList();
+                }).toList();
     }
 
-    @Nullable
     public FileMetadata getMetadata(File currentFile) {
         int index = fileList.indexOf(currentFile);
         return fileMetadataList.get(index);

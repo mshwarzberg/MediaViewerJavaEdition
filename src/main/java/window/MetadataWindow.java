@@ -9,12 +9,14 @@ import javafx.stage.Modality;
 import javafx.stage.StageStyle;
 import javafx.stage.Stage;
 import tool.FileMetadata;
+import tool.MyButton;
 
 import java.util.ArrayList;
 import java.util.List;
 
 public class MetadataWindow extends Stage {
     public static final int WINDOW_WIDTH = 400;
+    public static final int WINDOW_HEIGHT = 180;
     private final TitleBar titleBar;
     private final TabPane tabPane = new TabPane();
     private final Tab generalTab = new Tab("General");
@@ -47,7 +49,7 @@ public class MetadataWindow extends Stage {
         setScene(scene);
         setTitle(metadata.getSourceFile());
         setWidth(WINDOW_WIDTH);
-        setHeight(300);
+        setHeight(WINDOW_HEIGHT);
         show();
     }
 
@@ -55,11 +57,11 @@ public class MetadataWindow extends Stage {
         List<HBox> tagBoxes = new ArrayList<>();
         if (metadata.getTagsArray() != null) {
             for (String tag : metadata.getTagsArray()) {
-                tagBoxes.add(new HBox(new Button("-"), new Button(tag)));
+                tagBoxes.add(new HBox(new MyButton("-"), new MyButton(tag)));
             }
         }
         if (metadata.getTagsString() != null) {
-            tagBoxes.add(new HBox(new Button("-"), new Button(metadata.getTagsString())));
+            tagBoxes.add(new HBox(new MyButton("-"), new MyButton(metadata.getTagsString())));
         }
         tagsTab.setContent(new TagPane(tagBoxes));
     }
@@ -69,7 +71,7 @@ public class MetadataWindow extends Stage {
             setHgap(5);
             setVgap(10);
             getChildren().addAll(tagBoxes);
-            getChildren().add(new Button("+"));
+            getChildren().add(new MyButton("+"));
             setPadding(new Insets(10, 10, 10, 10));
             VBox container = new VBox();
             container.getChildren().addAll(this);
@@ -108,9 +110,9 @@ public class MetadataWindow extends Stage {
             }
         }
 
-        private static class SaveButton extends Button {
+        private static class SaveButton extends MyButton {
             SaveButton() {
-                setText("Save");
+                super("Save");
                 setAlignment(Pos.BASELINE_RIGHT);
                 setDisable(true);
             }

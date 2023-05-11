@@ -1,5 +1,6 @@
 package core;
 
+import java.io.File;
 import java.util.Arrays;
 
 public enum FileType {
@@ -19,7 +20,8 @@ public enum FileType {
         return Arrays.asList(this.extensions).contains(extension);
     }
 
-    public static FileType getByExtension(String extension) {
+    public static FileType getByExtension(File file) {
+        String extension = getFileExtension(file);
         if (Arrays.asList(IMAGE.extensions).contains(extension)) {
             return IMAGE;
         }
@@ -30,5 +32,12 @@ public enum FileType {
             return DOCUMENT;
         }
         return OTHER;
+    }
+
+    private static String getFileExtension(File selectedFile) {
+        if (selectedFile == null) {
+            return "";
+        }
+        return selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1);
     }
 }

@@ -1,4 +1,4 @@
-package controls;
+package video;
 
 import javafx.scene.layout.HBox;
 

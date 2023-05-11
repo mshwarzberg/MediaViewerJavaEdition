@@ -1,6 +1,8 @@
 package core;
 
 import javafx.application.Application;
+import javafx.beans.property.BooleanProperty;
+import javafx.beans.property.SimpleBooleanProperty;
 import javafx.scene.Scene;
 import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
@@ -12,6 +14,7 @@ import javafx.stage.Stage;
 import org.jetbrains.annotations.Nullable;
 import tool.ExifToolScanner;
 import tool.FileList;
+import tool.FileMetadata;
 import view.Viewer;
 import window.MetadataWindow;
 
@@ -24,6 +27,7 @@ public class Main extends Application {
     private static FileList fileList;
     private static MetadataWindow childWindow;
     public static final int BAR_HEIGHT = 50;
+    public static final BooleanProperty isFullscreen = new SimpleBooleanProperty(false);
 
     public static void main(String[] args) {
         launch(args);
@@ -39,6 +43,7 @@ public class Main extends Application {
         primaryStage.setTitle("Media Viewer");
         primaryStage.setScene(scene);
         primaryStage.show();
+        listeners();
     }
 
     public static void selectFile() {
@@ -52,7 +57,7 @@ public class Main extends Application {
             if (isNewDirectory) {
                 scanDirectoryForMedia();
             }
-            displayFile(FileType.getByExtension(getFileExtension(currentFile)));
+            displayFile(FileType.getByExtension(currentFile));
         }
     }
 
@@ -65,27 +70,20 @@ public class Main extends Application {
         thread.start();
     }
 
-    private static String getFileExtension(File selectedFile) {
-        if (selectedFile == null) {
-            return "";
-        }
-        return selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1);
-    }
-
     public static class ContentViewPage extends BorderPane {
         public static ContentViewPage INSTANCE = new ContentViewPage();
+
         private ContentViewPage() {
             setBackground(Background.fill(Paint.valueOf("black")));
             setOnMouseClicked(event -> requestFocus());
             setOnKeyPressed(event -> {
-                FileType type = FileType.getByExtension(getFileExtension(currentFile));
                 if (fileList != null) {
                     if (event.getCode() == KeyCode.LEFT) {
 //                if (IMAGE.isType(getFileExtension(currentFile)) || event.isShiftDown()) {
                         File previousFile = fileList.getPrevious(currentFile);
                         if (previousFile != currentFile) {
                             currentFile = previousFile;
-                            displayFile(type);
+                            displayFile(FileType.getByExtension(currentFile));
                         }
 //                }
                     } else if (event.getCode() == KeyCode.RIGHT) {
@@ -93,7 +91,7 @@ public class Main extends Application {
                         File nextFile = fileList.getNext(currentFile);
                         if (nextFile != currentFile) {
                             currentFile = nextFile;
-                            displayFile(type);
+                            displayFile(FileType.getByExtension(currentFile));
                         }
 //                }
                     }
@@ -118,16 +116,23 @@ public class Main extends Application {
         return currentFile;
     }
 
-    @Nullable
-    public static FileList getFileList() {
-        return fileList;
-    }
-
     public static MetadataWindow getChildWindow() {
         return childWindow;
     }
 
     public static void setChildWindow(MetadataWindow childWindow) {
         Main.childWindow = childWindow;
+    }
+
+    public static void showMetadata() {
+        FileMetadata metadata = fileList.getMetadata(currentFile);
+        setChildWindow(new MetadataWindow(metadata));
+    }
+
+    private void listeners() {
+        isFullscreen.addListener((observable, wasFullscreen, isValueFullscreen) -> {
+            primaryStage.setFullScreen(isValueFullscreen);
+            Navbar.INSTANCE.setVisible(!isValueFullscreen);
+        });
     }
 }
