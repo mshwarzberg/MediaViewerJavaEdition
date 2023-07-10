@@ -16,7 +16,7 @@ import java.util.List;
 
 public class MetadataWindow extends Stage {
     public static final int WINDOW_WIDTH = 400;
-    public static final int WINDOW_HEIGHT = 180;
+    public static final int WINDOW_HEIGHT = 300;
     private final TitleBar titleBar;
     private final TabPane tabPane = new TabPane();
     private final Tab generalTab = new Tab("General");
@@ -36,6 +36,7 @@ public class MetadataWindow extends Stage {
 
     public void setup() {
         generalTab.setContent(new GeneralTab(metadata));
+        generalTab.setStyle("-fx-text-fill: white");
         descriptionTab.setContent(new DescriptionTab(metadata));
         setTagsTab();
         tagsTab.setClosable(false);

@@ -1,5 +1,6 @@
 package video;
 
+import core.Main;
 import javafx.animation.Timeline;
 import javafx.beans.property.BooleanProperty;
 import javafx.beans.property.SimpleBooleanProperty;
@@ -14,14 +15,17 @@ public class Video extends MediaView {
     public static Video INSTANCE = new Video();
     private final BooleanProperty isPlaying = new SimpleBooleanProperty(true);
     private final BooleanProperty isMuted = new SimpleBooleanProperty(true);
+    private MediaPlayer mediaPlayer = new MediaPlayer(Main.EMPTY_VIDEO);
 
     private Video() {
+        setMediaPlayer(mediaPlayer);
         listeners();
     }
 
-    void updateMediaPlayer(URI source) {
+    public void updateMediaPlayer(URI source) {
         String path = source.toString();
-        MediaPlayer mediaPlayer = new MediaPlayer(new Media(path));
+        Media media = new Media(path);
+        mediaPlayer = new MediaPlayer(media);
         setMediaPlayer(mediaPlayer);
         if (isPlaying()) {
             mediaPlayer.play();
@@ -29,7 +33,10 @@ public class Video extends MediaView {
         mediaPlayer.setMute(isMuted());
         mediaPlayer.setCycleCount(Timeline.INDEFINITE);
         mediaPlayer.seek(new Duration(0));
-        SeekSlider.INSTANCE.initializeListeners();
+        mediaPlayer.setOnReady(() -> {
+            SeekSlider.INSTANCE.setMaxSeekPosition(mediaPlayer.getMedia().getDuration().toMillis());
+            currentTimeListener();
+        });
     }
 
     public boolean isPlaying() {
@@ -58,6 +65,12 @@ public class Video extends MediaView {
         } else {
             getMediaPlayer().pause();
         }
+    }
+
+    private void currentTimeListener() {
+        getMediaPlayer().currentTimeProperty().addListener((observable, oldValue, newValue) -> {
+            SeekSlider.INSTANCE.setSeekPosition(newValue.toMillis());
+        });
     }
 
     private void listeners() {

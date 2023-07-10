@@ -1,18 +1,19 @@
-package video;
+package view;
 
 import core.Main;
 import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
-import view.ViewController;
+import video.Video;
+import video.VideoControls;
 
 import java.net.URI;
 
-public class VideoContainer extends StackPane implements ViewController {
-    public static final VideoContainer INSTANCE = new VideoContainer();
+public class VideoViewer extends StackPane implements ViewController {
+    public static final VideoViewer INSTANCE = new VideoViewer();
 
-    private VideoContainer() {
+    private VideoViewer() {
         getChildren().addAll(Video.INSTANCE, VideoControls.INSTANCE);
         setAlignment(VideoControls.INSTANCE, Pos.BOTTOM_CENTER);
         Main.getPrimaryStage().showingProperty().addListener((observable -> {

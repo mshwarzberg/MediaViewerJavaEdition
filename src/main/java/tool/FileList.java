@@ -22,7 +22,7 @@ public class FileList {
     private static Stream<FileMetadata> filter(List<FileMetadata> fileMetadataList) {
         return fileMetadataList.stream().filter(fileMetadata -> {
             FileType type = FileType.getByExtension(fileMetadata.getFile());
-            return type == FileType.IMAGE || type == FileType.VIDEO;
+            return type != FileType.OTHER;
         });
     }
 

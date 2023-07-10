@@ -23,7 +23,6 @@ public class VideoControls extends BorderPane {
         setPrefWidth(Double.MAX_VALUE);
         setMaxHeight(HEIGHT);
         setId("videoControls");
-        getStyleClass().add("slider");
         setPadding(new Insets(PADDING));
         listeners();
     }

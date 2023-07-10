@@ -8,6 +8,7 @@ import javafx.scene.image.Image;
 import javafx.scene.input.KeyCode;
 import javafx.scene.layout.Background;
 import javafx.scene.layout.BorderPane;
+import javafx.scene.media.Media;
 import javafx.scene.paint.Paint;
 import javafx.stage.FileChooser;
 import javafx.stage.Stage;
@@ -15,6 +16,7 @@ import org.jetbrains.annotations.Nullable;
 import tool.ExifToolScanner;
 import tool.FileList;
 import tool.FileMetadata;
+import video.SeekSlider;
 import view.Viewer;
 import window.MetadataWindow;
 
@@ -28,6 +30,7 @@ public class Main extends Application {
     private static MetadataWindow childWindow;
     public static final int BAR_HEIGHT = 50;
     public static final BooleanProperty isFullscreen = new SimpleBooleanProperty(false);
+    public static final Media EMPTY_VIDEO = new Media(new File("src/main/resources/empty.mp4").toURI().toString());
 
     public static void main(String[] args) {
         launch(args);
@@ -42,8 +45,8 @@ public class Main extends Application {
         primaryStage.setMaximized(true);
         primaryStage.setTitle("Media Viewer");
         primaryStage.setScene(scene);
-        primaryStage.show();
         listeners();
+        primaryStage.show();
     }
 
     public static void selectFile() {
