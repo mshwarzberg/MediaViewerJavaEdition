@@ -59,7 +59,11 @@ public class FileList {
 
     public FileMetadata getMetadata(File currentFile) {
         int index = fileList.indexOf(currentFile);
-        return fileMetadataList.get(index);
+        try {
+            return fileMetadataList.get(index);
+        } catch (ArrayIndexOutOfBoundsException ignored) {
+            return new FileMetadata();
+        }
     }
 
     public File getNext(File currentFile) {
@@ -69,5 +73,4 @@ public class FileList {
     public File getPrevious(File currentFile) {
         return fileList.get(Math.max(0, fileList.indexOf(currentFile) - 1));
     }
-
 }

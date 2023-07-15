@@ -5,8 +5,10 @@ import javafx.geometry.Pos;
 import javafx.scene.input.MouseButton;
 import javafx.scene.layout.StackPane;
 import javafx.scene.media.MediaPlayer;
+import javafx.util.Duration;
 import video.Video;
 import video.VideoControls;
+import video.VideoProperties;
 
 import java.net.URI;
 
@@ -27,7 +29,7 @@ public class VideoViewer extends StackPane implements ViewController {
     @Override
     public void clearSource() {
         MediaPlayer previousMediaPlayer = Video.INSTANCE.getMediaPlayer();
-        if (previousMediaPlayer != null && previousMediaPlayer.getMedia() != null) {
+        if (previousMediaPlayer != null) {
             previousMediaPlayer.dispose();
             Video.INSTANCE.setMediaPlayer(null);
         }
@@ -43,11 +45,11 @@ public class VideoViewer extends StackPane implements ViewController {
     private void listeners() {
         setOnMousePressed(event -> {
             if (event.getButton() == MouseButton.PRIMARY) {
-                Video.INSTANCE.invertPlaying();
+                VideoProperties.INSTANCE.invertPlaying();
             }
             if (event.getClickCount() == 2) {
-                Main.isFullscreen.set(!Main.isFullscreen.get());
-             }
+                Main.invertFullscreen();
+            }
         });
     }
 }

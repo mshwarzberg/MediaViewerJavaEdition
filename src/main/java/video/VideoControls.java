@@ -2,8 +2,6 @@ package video;
 
 import javafx.animation.KeyFrame;
 import javafx.animation.Timeline;
-import javafx.beans.property.BooleanProperty;
-import javafx.beans.property.SimpleBooleanProperty;
 import javafx.event.Event;
 import javafx.geometry.Insets;
 import javafx.scene.layout.BorderPane;
@@ -11,10 +9,10 @@ import javafx.util.Duration;
 
 public class VideoControls extends BorderPane {
     public static final VideoControls INSTANCE = new VideoControls();
-    private final BooleanProperty showControls = new SimpleBooleanProperty(true);
-    private Timeline timeoutTimeline;
     public static final int HEIGHT = 90;
     public static final int PADDING = 10;
+    public static final int SIDE_CONTROLS_HEIGHT = VideoControls.HEIGHT / 6;
+    private Timeline timeoutTimeline;
 
     private VideoControls() {
         setTop(SeekSlider.INSTANCE);
@@ -28,14 +26,11 @@ public class VideoControls extends BorderPane {
     }
 
     public void listeners() {
-        showControls.addListener((observable, wasShowing, isValueShowing) -> {
-            setVisible(showControls());
-        });
         timeoutTimeline = new Timeline(
                 new KeyFrame(Duration.seconds(3),
                         event -> {
-                            if (Video.INSTANCE.isPlaying()) {
-                                showControls.set(false);
+                            if (VideoProperties.INSTANCE.isPlaying()) {
+                                VideoProperties.INSTANCE.setShowControls(false);
                             }
                         }
                 )
@@ -55,10 +50,7 @@ public class VideoControls extends BorderPane {
         if (shouldRestartTimeline) {
             timeoutTimeline.play();
         }
-        showControls.set(true);
+        VideoProperties.INSTANCE.setShowControls(true);
     }
 
-    public boolean showControls() {
-        return showControls.get();
-    }
 }

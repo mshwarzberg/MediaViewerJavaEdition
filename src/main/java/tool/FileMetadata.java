@@ -4,24 +4,32 @@ import java.io.File;
 import java.util.List;
 
 import com.google.gson.*;
+import javafx.scene.control.Label;
+import javafx.scene.control.TextArea;
+import javafx.scene.control.TextField;
+import javafx.scene.layout.HBox;
+import javafx.scene.layout.Priority;
+import javafx.scene.layout.VBox;
+import window.MetadataWindow;
 
 import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Map;
 import java.util.Set;
 
-public class FileMetadata {
+public class FileMetadata extends VBox {
     private String fileName;
     private String sourceFile;
     private String fileSize;
-    private String tooltipString;
     private String description;
     private List<String> tagsArray;
     private String tagsString;
     private String headline;
     private File file;
 
-    public FileMetadata() {}
+    public FileMetadata() {
+        setPrefWidth(MetadataWindow.WINDOW_WIDTH - 40);
+    }
 
     public String getFileName() {
         return fileName;
@@ -53,10 +61,6 @@ public class FileMetadata {
 
     public String getTagsString() {
         return tagsString;
-    }
-
-    public String getTooltipString() {
-        return tooltipString;
     }
 
     public static class FileMetadataDeserializer implements JsonDeserializer<FileMetadata> {
@@ -93,18 +97,19 @@ public class FileMetadata {
         }
 
         private void buildTooltip(JsonObject jsonObject, FileMetadata fileMetadata) {
-            StringBuilder stringBuilder = new StringBuilder();
             Set<Map.Entry<String, JsonElement>> entries = jsonObject.entrySet();
             for (Map.Entry<String, JsonElement> entry : entries) {
                 String name = entry.getKey();
                 JsonElement value = entry.getValue();
-                stringBuilder
-                        .append(name)
-                        .append(": ")
-                        .append(value.toString())
-                        .append("\n");
+                HBox metadataBlock = new HBox();
+                try {
+                    metadataBlock.getChildren().addAll(new Label(name + ": "), new TextField(value.getAsString()));
+                } catch (IllegalStateException e) {
+                    metadataBlock.getChildren().addAll(new Label(name + ": "), new TextField(value.toString()));
+                }
+                HBox.setHgrow(metadataBlock.getChildren().get(1), Priority.ALWAYS);
+                fileMetadata.getChildren().add(metadataBlock);
             }
-            fileMetadata.tooltipString = stringBuilder.toString();
         }
     }
 }

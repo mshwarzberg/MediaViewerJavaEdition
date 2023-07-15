@@ -12,7 +12,6 @@ public class Viewer extends StackPane {
     private Viewer() {
         getChildren().addAll(ImageViewer.INSTANCE, VideoViewer.INSTANCE, DocumentViewer.INSTANCE);
         setTranslateY(-Main.BAR_HEIGHT);
-        addKeyListeners();
     }
 
     public void setSources(FileType fileType, URI uri) {
@@ -24,17 +23,5 @@ public class Viewer extends StackPane {
             case VIDEO -> VideoViewer.INSTANCE.setSource(uri);
             case DOCUMENT -> DocumentViewer.INSTANCE.setSource(uri);
         }
-    }
-
-    private void addKeyListeners() {
-//        setOnMouseClicked(event -> {
-//            MediaPlayer mediaPlayer = Video.INSTANCE.getMediaPlayer();
-//            if (event.getButton() == MouseButton.BACK) {
-//                Main.showMetadata();
-//            }
-//            if (event.getButton() == MouseButton.PRIMARY && mediaPlayer != null) {
-//                System.out.println(mediaPlayer.getMedia().getSource());
-//            }
-//        });
     }
 }

@@ -6,7 +6,8 @@ module your.module.name {
     requires org.apache.commons.io;
     requires com.google.gson;
     requires annotations;
-
+    requires java.sql;
+    requires javafx.swing;
     exports core;
 
     opens tool to  com.google.gson;

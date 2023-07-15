@@ -1,9 +1,5 @@
 package video;
 
-import javafx.beans.property.DoubleProperty;
-import javafx.beans.property.IntegerProperty;
-import javafx.beans.property.SimpleDoubleProperty;
-import javafx.beans.property.SimpleIntegerProperty;
 import javafx.geometry.Insets;
 import javafx.geometry.Pos;
 import javafx.scene.control.ProgressBar;
@@ -13,23 +9,17 @@ import tool.MyToggleButton;
 
 public class Volume extends HBox {
     public static Volume INSTANCE = new Volume();
-    private final DoubleProperty volumeLevel = new SimpleDoubleProperty(1);
+    public final VolumeSlider SLIDER_INSTANCE = new VolumeSlider();
 
     private Volume() {
-        MyToggleButton muteUnmute = new MyToggleButton("Unmute");
-        muteUnmute.setOnAction(event -> {
-            muteUnmute.setText(Video.INSTANCE.isMuted() ? "Mute" : "Unmute");
-            Video.INSTANCE.invertMuted();
-        });
+        Runnable doSomething = VideoProperties.INSTANCE::invertMuted;
+        MyToggleButton muteUnmute = new MyToggleButton("Mute", "Unmute", VideoProperties.INSTANCE.getMutedProperty(), doSomething);
         setPadding(new Insets((double) VideoControls.HEIGHT / 4, 0, 0, 0));
-        getChildren().addAll(muteUnmute, new VolumeSlider());
+        getChildren().addAll(muteUnmute, SLIDER_INSTANCE);
         setAlignment(Pos.CENTER);
-        volumeLevel.addListener((observable, n, v) -> {
-            Video.INSTANCE.getMediaPlayer().setVolume((Double) v);
-        });
     }
 
-    private static class VolumeSlider extends ProgressBar {
+    public static class VolumeSlider extends ProgressBar {
         private static final int WIDTH = 50;
 
         private VolumeSlider() {
@@ -45,17 +35,8 @@ public class Volume extends HBox {
         private void updateSliderProperty(MouseEvent event) {
             double mouseX = event.getX();
             double width = getWidth();
-            double seekTime = (mouseX / width);
-            Volume.INSTANCE.setVolumeLevel(seekTime);
-            setProgress(seekTime);
+            double seekTime = Math.max((mouseX / width), 0);
+            VideoProperties.INSTANCE.setVolumeLevel(seekTime);
         }
-    }
-
-    public void setVolumeLevel(double volumeLevel) {
-        this.volumeLevel.set(volumeLevel);
-    }
-
-    public double getVolumeLevel() {
-        return volumeLevel.get();
     }
 }

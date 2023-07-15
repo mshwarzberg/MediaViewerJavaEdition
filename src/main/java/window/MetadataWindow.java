@@ -19,9 +19,9 @@ public class MetadataWindow extends Stage {
     public static final int WINDOW_HEIGHT = 300;
     private final TitleBar titleBar;
     private final TabPane tabPane = new TabPane();
-    private final Tab generalTab = new Tab("General");
-    private final Tab descriptionTab = new Tab("Description");
-    private final Tab tagsTab = new Tab("Tags");
+    private final MyTab generalTab = new MyTab("General");
+    private final MyTab descriptionTab = new MyTab("Description");
+    private final MyTab tagsTab = new MyTab("Tags");
     private final FileMetadata metadata;
 
     public MetadataWindow(FileMetadata metadata) {
@@ -42,6 +42,7 @@ public class MetadataWindow extends Stage {
         tagsTab.setClosable(false);
         generalTab.setClosable(false);
         descriptionTab.setClosable(false);
+        generalTab.selectedProperty();
     }
 
     private void setWindowContent() {
@@ -81,13 +82,27 @@ public class MetadataWindow extends Stage {
 
     private static class GeneralTab extends ScrollPane {
         GeneralTab(FileMetadata metadata) {
-            Label generalContent = new Label(metadata.getTooltipString());
-            generalContent.setWrapText(true);
-            generalContent.setPrefWidth(WINDOW_WIDTH - 20);
             setHbarPolicy(ScrollPane.ScrollBarPolicy.NEVER);
             setVbarPolicy(ScrollPane.ScrollBarPolicy.AS_NEEDED);
-            setContent(generalContent);
+            setContent(metadata);
             setPadding(new Insets(10));
+        }
+    }
+
+    private static class MyTab extends Tab {
+
+        public MyTab(String text) {
+            super(text);
+            getStyleClass().add("unselectedTab");
+            selectedProperty().addListener((event, oldValue, newValue) -> {
+                if (newValue) {
+                    getStyleClass().add("selectedTab");
+                    getStyleClass().remove("unselectedTab");
+                } else {
+                    getStyleClass().add("unselectedTab");
+                    getStyleClass().remove("selectedTab");
+                }
+            });
         }
     }
 

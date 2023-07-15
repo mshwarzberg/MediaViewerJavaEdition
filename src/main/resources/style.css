@@ -4,14 +4,32 @@
     -fx-border-color: white;
     -fx-border-width: 1.5px;
     -fx-cursor: hand;
+    -fx-border-radius: 2px;
+    -fx-focus-color: transparent;
 }
 
-.tab > * {
+.selectedTab, .unselectedTab:hover {
+    -fx-background-color: white;
+    -fx-border-color: black;
+    -fx-border-width: 1.5px;
+    -fx-border-radius: 2px;
+    -fx-focus-color: transparent;
+}
+
+.selectedTab {
+    -fx-cursor: default;
+}
+
+.unselectedTab * {
     -fx-text-fill: white;
+    -fx-cursor: hand;
 }
 
+.selectedTab *, .unselectedTab:hover * {
+    -fx-text-fill: black;
+}
 
-.customButton:hover, .tab:hover {
+.customButton:hover {
     -fx-background-color: white;
     -fx-text-fill: black;
     -fx-border-color: black;
@@ -24,6 +42,7 @@
 .slider {
     -fx-background-color: #ffffff;
     -fx-cursor: hand;
+    -fx-pref-height: 8px;
 }
 
 #seekSlider .bar {

@@ -9,12 +9,12 @@ import com.google.gson.*;
 import org.apache.commons.io.IOUtils;
 
 public class ExifToolScanner {
-    private final String pathToScan;
     private static final String EXIFTOOL_PATH = "./src/main/resources/exiftool.exe";
     private static final Gson gson = new GsonBuilder()
             .registerTypeAdapter(FileMetadata.class, new FileMetadata.FileMetadataDeserializer())
             .create();
-    ;
+    private final String pathToScan;
+
     private List<FileMetadata> fileMetadataArray = new ArrayList<>();
 
     public ExifToolScanner(String pathToScan) {

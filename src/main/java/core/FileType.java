@@ -4,20 +4,16 @@ import java.io.File;
 import java.util.Arrays;
 
 public enum FileType {
-    VIDEO(new String[]{"mp4", "mkv", "avi"}),
-    IMAGE(new String[]{"jpg", "jpeg", "png", "gif", "bmp", "wbmp"}),
+    VIDEO(new String[]{"mp4", "mkv", "avi", "webm"}),
+    IMAGE(new String[]{"jpg", "jpeg", "png", "gif", "bmp", "wbmp", "webp"}),
     DOCUMENT(new String[]{"txt", "rtf"}),
-    OTHER(new String[] {})
+    OTHER(new String[]{}),
     ;
 
     private final String[] extensions;
 
     FileType(String[] extensions) {
         this.extensions = extensions;
-    }
-
-    public boolean isType(String extension) {
-        return Arrays.asList(this.extensions).contains(extension);
     }
 
     public static FileType getByExtension(File file) {
@@ -39,5 +35,9 @@ public enum FileType {
             return "";
         }
         return selectedFile.getName().substring(selectedFile.getName().lastIndexOf(".") + 1);
+    }
+
+    public boolean isType(String extension) {
+        return Arrays.asList(this.extensions).contains(extension);
     }
 }
